@@ -1,3 +1,9 @@
+# Chrome Extension Development
+*.crx
+*.pem
+.DS_Store
+Thumbs.db
+
 # Logs
 logs
 *.log
@@ -37,7 +43,7 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
+# Dependencies
 node_modules/
 jspm_packages/
 
@@ -65,13 +71,14 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
+# Environment variables
 .env
 .env.*
 !.env.example
 
-# parcel-bundler cache (https://parceljs.org/)
+# Cache
 .cache
+.cache/
 .parcel-cache
 
 # Next.js build output
@@ -83,7 +90,6 @@ out
 dist
 
 # Gatsby files
-.cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
@@ -93,7 +99,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Sveltekit cache directory
 .svelte-kit/
@@ -137,3 +142,6 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Vercel
+.vercel

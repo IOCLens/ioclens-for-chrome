@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IOC Test Page - Threat Intel Extension</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #e0e0e0;
+    }
+    h1 {
+      color: #00aaff;
+      border-bottom: 2px solid #00aaff;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #ffaa00;
+      margin-top: 30px;
+    }
+    .section {
+      background: #2a2a2a;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border-left: 4px solid #00aaff;
+    }
+    .ioc-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .ioc-item {
+      background: #1a1a1a;
+      padding: 12px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      border: 1px solid #444;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ioc-item:hover {
+      border-color: #00aaff;
+      background: #252525;
+    }
+    .ioc-type {
+      display: inline-block;
+      background: #444;
+      color: #00aaff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+    .description {
+      color: #999;
+      font-size: 13px;
+      margin-top: 5px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .instruction {
+      background: #2a3a2a;
+      border-left: 4px solid #00ff00;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .malicious {
+      border-left-color: #ff0000;
+    }
+    .suspicious {
+      border-left-color: #ffaa00;
+    }
+    .clean {
+      border-left-color: #00ff00;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Threat Intel Extension - Test Page</h1>
+
+  <div class="instruction">
+    <strong>📋 Instructions:</strong> Sélectionnez n'importe quel IOC ci-dessous, faites clic-droit et choisissez <strong>"Enrich IOC"</strong> pour tester l'extension.
+  </div>
+
+  <!-- IPv4 Addresses -->
+  <div class="section clean">
+    <h2>🌐 IPv4 Addresses - Clean/Safe</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>8.8.8.8</span><span class="ioc-type">IPv4</span>
+        <div class="description">Google Public DNS - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>1.1.1.1</span><span class="ioc-type">IPv4</span>
+        <div class="description">Cloudflare DNS - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>9.9.9.9</span><span class="ioc-type">IPv4</span>
+        <div class="description">Quad9 DNS - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>208.67.222.222</span><span class="ioc-type">IPv4</span>
+        <div class="description">OpenDNS - Should be CLEAN</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section suspicious">
+    <h2>⚠️ IPv4 Addresses - Suspicious/VPN/Proxy</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>45.142.120.1</span><span class="ioc-type">IPv4</span>
+        <div class="description">Hosting/Datacenter IP - May be flagged as suspicious</div>
+      </div>
+      <div class="ioc-item">
+        <span>185.220.101.1</span><span class="ioc-type">IPv4</span>
+        <div class="description">Tor exit node range - May be flagged</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Domains -->
+  <div class="section clean">
+    <h2>🌍 Domains - Clean/Safe</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>google.com</span><span class="ioc-type">Domain</span>
+        <div class="description">Google - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>github.com</span><span class="ioc-type">Domain</span>
+        <div class="description">GitHub - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>stackoverflow.com</span><span class="ioc-type">Domain</span>
+        <div class="description">Stack Overflow - Should be CLEAN</div>
+      </div>
+      <div class="ioc-item">
+        <span>wikipedia.org</span><span class="ioc-type">Domain</span>
+        <div class="description">Wikipedia - Should be CLEAN</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section malicious">
+    <h2>🚨 Domains - Potentially Malicious (For Testing Only)</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>test-malware-domain.com</span><span class="ioc-type">Domain</span>
+        <div class="description">Test domain - Check if flagged</div>
+      </div>
+      <div class="ioc-item">
+        <span>phishing-test.example.com</span><span class="ioc-type">Domain</span>
+        <div class="description">Example phishing domain</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onion Addresses -->
+  <div class="section">
+    <h2>🧅 Tor .onion Addresses</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>3g2upl4pq6kufc4m.onion</span><span class="ioc-type">Onion</span>
+        <div class="description">DuckDuckGo Tor address</div>
+      </div>
+      <div class="ioc-item">
+        <span>thehiddenwiki.onion</span><span class="ioc-type">Onion</span>
+        <div class="description">The Hidden Wiki</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- URLs -->
+  <div class="section">
+    <h2>🔗 Full URLs</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>https://www.google.com/search?q=test</span><span class="ioc-type">URL</span>
+        <div class="description">Google search URL - Should extract domain: google.com</div>
+      </div>
+      <div class="ioc-item">
+        <span>https://github.com/anthropics/claude-code</span><span class="ioc-type">URL</span>
+        <div class="description">GitHub URL - Should extract domain: github.com</div>
+      </div>
+      <div class="ioc-item">
+        <span>https://threatfox.abuse.ch/ioc/1608908/</span><span class="ioc-type">URL</span>
+        <div class="description">ThreatFox IOC page - Should extract domain</div>
+      </div>
+      <div class="ioc-item">
+        <span>http://malware-site.example.com/payload.exe</span><span class="ioc-type">URL</span>
+        <div class="description">Malware URL example</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHA256 Hashes -->
+  <div class="section malicious">
+    <h2>🔐 SHA256 File Hashes</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f</span><span class="ioc-type">SHA256</span>
+        <div class="description">Known malware hash - WannaCry ransomware</div>
+      </div>
+      <div class="ioc-item">
+        <span>ed01ebfbc9eb5bbea545af4d01bf5f1071661840480439c6e5babe8e080e41aa</span><span class="ioc-type">SHA256</span>
+        <div class="description">Emotet malware sample</div>
+      </div>
+      <div class="ioc-item">
+        <span>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span><span class="ioc-type">SHA256</span>
+        <div class="description">SHA256 of empty file - Should be clean</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Defanged IOCs -->
+  <div class="section">
+    <h2>🔧 Defanged IOCs (Auto-cleanup test)</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>hxxp://evil[.]com</span><span class="ioc-type">Defanged URL</span>
+        <div class="description">Should auto-refang to: http://evil.com</div>
+      </div>
+      <div class="ioc-item">
+        <span>hXXps://malware[dot]net</span><span class="ioc-type">Defanged URL</span>
+        <div class="description">Should auto-refang to: https://malware.net</div>
+      </div>
+      <div class="ioc-item">
+        <span>bad[.]domain[.]org</span><span class="ioc-type">Defanged Domain</span>
+        <div class="description">Should auto-refang to: bad.domain.org</div>
+      </div>
+      <div class="ioc-item">
+        <span>h ttp[:]//sketchy-site[dot]com</span><span class="ioc-type">Defanged URL</span>
+        <div class="description">Should auto-refang to: http://sketchy-site.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IOCs with Context -->
+  <div class="section">
+    <h2>📝 IOCs with Surrounding Text (Extraction test)</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>The IP address 8.8.8.8 is Google DNS</span><span class="ioc-type">Context</span>
+        <div class="description">Should extract: 8.8.8.8</div>
+      </div>
+      <div class="ioc-item">
+        <span>Found malware on malicious-domain.com (confirmed)</span><span class="ioc-type">Context</span>
+        <div class="description">Should extract: malicious-domain.com</div>
+      </div>
+      <div class="ioc-item">
+        <span>[IOC] 3g2upl4pq6kufc4m.onion (Tor)</span><span class="ioc-type">Context</span>
+        <div class="description">Should extract: 3g2upl4pq6kufc4m.onion</div>
+      </div>
+      <div class="ioc-item">
+        <span>C2 server: 185.220.101.50 - Active</span><span class="ioc-type">Context</span>
+        <div class="description">Should extract: 185.220.101.50</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mixed Scenarios -->
+  <div class="section">
+    <h2>🎯 Real-World Scenarios</h2>
+    <div class="ioc-list">
+      <div class="ioc-item">
+        <span>Alert: Suspicious connection to 45.142.120.1 detected</span><span class="ioc-type">Scenario</span>
+        <div class="description">SOC alert format - Should extract IP</div>
+      </div>
+      <div class="ioc-item">
+        <span>Phishing email from: fake-bank[.]phishing-site[.]com</span><span class="ioc-type">Scenario</span>
+        <div class="description">Defanged domain in context</div>
+      </div>
+      <div class="ioc-item">
+        <span>Download: hxxp://malware-cdn[.]evil[.]net/trojan.exe</span><span class="ioc-type">Scenario</span>
+        <div class="description">Defanged malware URL</div>
+      </div>
+      <div class="ioc-item">
+        <span>Known botnet C2: 203.0.113.45 (RFC 5737 example)</span><span class="ioc-type">Scenario</span>
+        <div class="description">IP with descriptive text</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="instruction" style="margin-top: 40px;">
+    <strong>✅ Expected Behavior:</strong>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+      <li>Select any IOC above (single-click and drag, or double-click)</li>
+      <li>Right-click and choose "Enrich IOC: [selected text]"</li>
+      <li>Popup should open with enrichment data from ip-api.com, URLhaus, and ThreatFox</li>
+      <li>No errors for free APIs (ip-api.com, URLhaus, ThreatFox)</li>
+      <li>Verdict should show "SAFE" for known good IPs/domains</li>
+      <li>External links should appear for all 3 APIs</li>
+      <li>Defanged IOCs should be automatically cleaned before enrichment</li>
+    </ul>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 12px;">
+    <p>🔬 Threat Intel Extension Test Suite v1.0</p>
+    <p>Use this page to validate IOC detection, extraction, and enrichment functionality</p>
+  </div>
+</body>
+</html>

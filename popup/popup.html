@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IOC Enrichment</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- PRO Upgrade Banner -->
+    <div class="pro-banner">
+      <span class="pro-text">Upgrade to PRO for advanced threat intelligence sources</span>
+      <button id="gumroad-purchase" class="btn-gumroad">Get PRO</button>
+    </div>
+
+    <!-- License Key Section (hidden by default) -->
+    <div id="license-section" class="license-section hidden">
+      <input type="text" id="license-key-input" placeholder="Enter your PRO license key" />
+      <button id="activate-license" class="btn-activate">Activate</button>
+      <div id="license-status" class="license-status"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <h1><span aria-hidden="true">🔍</span> Threat Intel Enrichment</h1>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+          <span class="theme-icon">☀️</span>
+        </button>
+      </div>
+      <div id="ioc-display" class="ioc-value">
+        <span id="ioc-text">Right-click on an IP, domain, or hash and select "Enrich IOC"</span>
+        <span id="ioc-type" class="ioc-type"></span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading hidden" role="status" aria-live="polite" aria-label="Loading indicator">
+      <div class="spinner"></div>
+      <p>Enriching IOC...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error hidden" role="alert" aria-live="assertive" tabindex="-1">
+      <p id="error-message"></p>
+    </div>
+
+    <!-- API Warnings (Partial failures) -->
+    <div id="api-warnings" class="api-warnings hidden">
+      <div class="warnings-header">⚠️ Some APIs failed:</div>
+      <div id="api-warnings-list" class="warnings-list"></div>
+    </div>
+
+    <!-- Results Container -->
+    <div id="results" class="results hidden">
+
+      <!-- Reputation Section -->
+      <div id="reputation-section" class="section">
+        <h2>📊 Reputation Analysis</h2>
+        <div class="reputation-score">
+          <div id="reputation-indicator" class="indicator"></div>
+          <div id="reputation-text" class="reputation-text">Unknown</div>
+        </div>
+      </div>
+
+      <!-- Per-API Verdicts Section -->
+      <div id="api-verdicts" class="section hidden">
+        <h2>🔍 Individual API Verdicts</h2>
+        <div id="api-verdicts-list"></div>
+      </div>
+
+      <!-- Geolocation Section (IP only) -->
+      <div id="geo-section" class="section hidden">
+        <h2>📍 Geolocation</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Country:</span>
+            <span id="geo-country" class="value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="label">City:</span>
+            <span id="geo-city" class="value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Region:</span>
+            <span id="geo-region" class="value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="label">ISP:</span>
+            <span id="geo-isp" class="value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="label">ASN:</span>
+            <span id="geo-asn" class="value">-</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Organization:</span>
+            <span id="geo-org" class="value">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threats Detected Section -->
+      <div id="threats-section" class="section hidden">
+        <h2>⚠️ Threats Detected</h2>
+        <div id="threats-list" class="threats-list"></div>
+      </div>
+
+      <!-- Tags & Indicators Section -->
+      <div id="tags-section" class="section hidden">
+        <h2>🏷️ Tags & Indicators</h2>
+
+        <div id="malware-families-container" class="tag-category hidden">
+          <h3>Malware Families</h3>
+          <div id="malware-families-list" class="tags-list"></div>
+        </div>
+
+        <div id="threat-types-container" class="tag-category hidden">
+          <h3>Threat Types</h3>
+          <div id="threat-types-list" class="tags-list"></div>
+        </div>
+
+        <div id="categories-container" class="tag-category hidden">
+          <h3>Attack Categories</h3>
+          <div id="categories-list" class="tags-list"></div>
+        </div>
+
+        <div id="cves-container" class="tag-category hidden">
+          <h3>Vulnerabilities (CVEs)</h3>
+          <div id="cves-list" class="tags-list"></div>
+        </div>
+
+        <div id="attack-ids-container" class="tag-category hidden">
+          <h3>MITRE ATT&CK</h3>
+          <div id="attack-ids-list" class="tags-list"></div>
+        </div>
+
+        <div id="general-tags-container" class="tag-category hidden">
+          <h3>General Tags</h3>
+          <div id="general-tags-list" class="tags-list"></div>
+        </div>
+      </div>
+
+      <!-- Technical Details Section -->
+      <div class="section">
+        <h2>🔧 Technical Details</h2>
+        <div id="technical-details" class="info-grid">
+          <div class="info-item">
+            <span class="label">First Seen:</span>
+            <span id="tech-first-seen" class="value">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button id="copy-json" class="btn btn-primary" aria-label="Copy enrichment data as JSON to clipboard">📋 Copy JSON</button>
+        <button id="refresh" class="btn btn-secondary" aria-label="Refresh enrichment data by clearing cache and re-querying APIs">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Sources: <span id="sources-list">-</span> | Last updated: <span id="last-updated">-</span></p>
+      <p id="pro-status" class="pro-status-badge hidden">PRO</p>
+    </div>
+  </div>
+
+  <script src="../logger.js"></script>
+  <script src="../crypto-utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

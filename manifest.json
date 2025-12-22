@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "SOC Threat Intel Enrichment",
+  "version": "2.0.0",
+  "description": "Enrich IOCs (IP, domains, hashes) with threat intelligence data from multiple sources",
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "http://ip-api.com/*",
+    "https://ip-api.com/*",
+    "https://ipapi.co/*",
+    "https://www.virustotal.com/*",
+    "https://api.abuseipdb.com/*",
+    "https://api.shodan.io/*",
+    "https://urlhaus-api.abuse.ch/*",
+    "https://threatfox-api.abuse.ch/*",
+    "https://otx.alienvault.com/*",
+    "https://api.greynoise.io/*"
+  ],
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; connect-src 'self' http://ip-api.com https://ip-api.com https://ipapi.co https://www.virustotal.com https://api.abuseipdb.com https://api.shodan.io https://urlhaus-api.abuse.ch https://threatfox-api.abuse.ch https://otx.alienvault.com https://api.greynoise.io"
+  }
+}

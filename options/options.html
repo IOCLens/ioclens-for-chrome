@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC Extension - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔍 SOC Threat Intel Extension - Settings</h1>
+      <p>Configure your API keys and enable/disable enrichment modules</p>
+    </header>
+
+    <div class="status-message hidden" id="status-message"></div>
+
+    <!-- PRO License Section -->
+    <div class="pro-license-section">
+      <div class="pro-license-header">
+        <div class="pro-header-left">
+          <h2>✨ PRO License</h2>
+          <div id="pro-status-indicator" class="status-indicator">
+            <span id="pro-status-text">FREE</span>
+          </div>
+        </div>
+        <button id="get-pro-btn" class="btn btn-pro">Get PRO</button>
+      </div>
+
+      <div id="free-tier-info" class="tier-info-compact">
+        <span class="tier-message">Free tier: VirusTotal only • Upgrade to unlock all sources</span>
+      </div>
+
+      <div id="pro-tier-info" class="tier-info-compact hidden">
+        <span class="tier-message">✅ PRO Active • All sources unlocked</span>
+        <div class="pro-key-controls">
+          <span id="current-license-key" class="masked-key">***************</span>
+          <button id="show-pro-key-btn" class="btn-show-key-small" aria-label="Toggle PRO key visibility">👁️</button>
+          <button id="deactivate-pro-btn" class="btn-deactivate">Deactivate</button>
+        </div>
+      </div>
+
+      <div class="license-input-compact">
+        <input type="text" id="pro-license-input" placeholder="Enter license key" />
+        <button id="activate-pro-btn" class="btn btn-primary">Activate</button>
+        <div id="license-activation-status" class="license-status"></div>
+      </div>
+    </div>
+
+    <div class="modules-grid">
+
+      <!-- IP-API.com (free) -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>📍 ip-api.com</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-ipapi" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">IP geolocation and metadata</p>
+        <div class="module-info">
+          <span class="badge badge-free">Free</span>
+          <span>45 req/min (HTTP only) | With key: HTTPS + unlimited</span>
+        </div>
+        <div class="form-group">
+          <label>API Key (optional for HTTPS + unlimited): <a href="https://members.ip-api.com/" target="_blank">Get Key</a></label>
+          <input type="password" id="key-ipapi" placeholder="Optional - leave empty for free tier (HTTP)">
+          <button class="btn-show-key" aria-label="Toggle ip-api.com API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- ipapi.co -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>🌐 ipapi.co</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-ipapiCo">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Alternative IP geolocation with additional details</p>
+        <div class="module-info">
+          <span class="badge badge-free">Free</span>
+          <span>1000 req/day</span>
+        </div>
+        <div class="form-group">
+          <label>API Key (optional for higher limits): <a href="https://ipapi.co/" target="_blank">Get Key</a></label>
+          <input type="password" id="key-ipapiCo" placeholder="Optional - leave empty for free tier">
+          <button class="btn-show-key" aria-label="Toggle ipapi.co API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- VirusTotal -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>🦠 VirusTotal</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-virustotal">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Malware detection for IPs, domains, and hashes</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>4 req/min</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://www.virustotal.com/gui/join-us" target="_blank">Get Key</a></label>
+          <input type="password" id="key-virustotal" placeholder="Your VirusTotal API key">
+          <button class="btn-show-key" aria-label="Toggle VirusTotal API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- AbuseIPDB -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>⚠️ AbuseIPDB</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-abuseipdb">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">IP abuse reports and confidence scoring</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>1000 req/day</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://www.abuseipdb.com/register" target="_blank">Get Key</a></label>
+          <input type="password" id="key-abuseipdb" placeholder="Your AbuseIPDB API key">
+          <button class="btn-show-key" aria-label="Toggle AbuseIPDB API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- Shodan -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>🔎 Shodan</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-shodan">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Device and port scan information</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>Limited queries</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://account.shodan.io/register" target="_blank">Get Key</a></label>
+          <input type="password" id="key-shodan" placeholder="Your Shodan API key">
+          <button class="btn-show-key" aria-label="Toggle Shodan API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- URLhaus -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>🔗 URLhaus</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-urlhaus">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Malware URL database by Abuse.ch</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>Free tier</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://urlhaus.abuse.ch/api/" target="_blank">Get Key</a></label>
+          <input type="password" id="key-urlhaus" placeholder="Your URLhaus API key">
+          <button class="btn-show-key" aria-label="Toggle URLhaus API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- ThreatFox -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>🦊 ThreatFox</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-threatfox">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">IOC database by Abuse.ch</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>Free tier</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://threatfox.abuse.ch/api/" target="_blank">Get Key</a></label>
+          <input type="password" id="key-threatfox" placeholder="Your ThreatFox API key">
+          <button class="btn-show-key" aria-label="Toggle ThreatFox API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- AlienVault OTX -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>👽 AlienVault OTX</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-otx">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Open threat intelligence community</p>
+        <div class="module-info">
+          <span class="badge badge-key">Key Required</span>
+          <span>Free tier</span>
+        </div>
+        <div class="form-group">
+          <label>API Key: <a href="https://otx.alienvault.com/api" target="_blank">Get Key</a></label>
+          <input type="password" id="key-otx" placeholder="Your OTX API key">
+          <button class="btn-show-key" aria-label="Toggle OTX API key visibility">👁️</button>
+        </div>
+      </div>
+
+      <!-- GreyNoise -->
+      <div class="module-card">
+        <div class="module-header">
+          <h2>📡 GreyNoise</h2>
+          <label class="toggle">
+            <input type="checkbox" id="enable-greynoise" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="module-desc">Distinguish malicious from benign internet scanners</p>
+        <div class="module-info">
+          <span class="badge badge-free">Free</span>
+          <span>50 req/week (Community API)</span>
+        </div>
+        <div class="form-group">
+          <label>API Key (optional for higher limits): <a href="https://www.greynoise.io/viz/signup" target="_blank">Get Key</a></label>
+          <input type="password" id="key-greynoise" placeholder="Optional - leave empty for community tier">
+          <button class="btn-show-key" aria-label="Toggle GreyNoise API key visibility">👁️</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Display Sections Configuration -->
+    <div class="display-config-section">
+      <h2>🖥️ Display Settings</h2>
+      <p>Choose which sections to show in the popup</p>
+
+      <div class="display-options">
+        <label class="display-option">
+          <input type="checkbox" id="display-reputation" checked>
+          <span>📊 Reputation Analysis</span>
+        </label>
+
+        <label class="display-option">
+          <input type="checkbox" id="display-individualVerdicts" checked>
+          <span>🔍 Individual API Verdicts</span>
+        </label>
+
+        <label class="display-option">
+          <input type="checkbox" id="display-geolocation" checked>
+          <span>📍 Geolocation</span>
+        </label>
+
+        <label class="display-option">
+          <input type="checkbox" id="display-threats" checked>
+          <span>⚠️ Threats Detected</span>
+        </label>
+
+        <label class="display-option">
+          <input type="checkbox" id="display-tags" checked>
+          <span>🏷️ Tags & Indicators</span>
+        </label>
+
+        <label class="display-option">
+          <input type="checkbox" id="display-technicalDetails" checked>
+          <span>🔧 Technical Details</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Advanced Settings -->
+    <div class="advanced-settings-section">
+      <h2>⚙️ Advanced Settings</h2>
+
+      <div class="advanced-option">
+        <label class="toggle-option">
+          <input type="checkbox" id="debug-mode">
+          <span class="toggle-label">
+            <span class="toggle-title">🐛 Debug Mode</span>
+            <span class="toggle-desc">Enable detailed logging in browser console (for troubleshooting)</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="save-btn" class="btn btn-primary" aria-label="Save API configuration settings">💾 Save Settings</button>
+      <button id="reset-btn" class="btn btn-secondary" aria-label="Reset all settings to default values">🔄 Reset to Defaults</button>
+      <button id="test-btn" class="btn btn-secondary" aria-label="Test all configured API connections">🧪 Test APIs</button>
+      <button id="logs-btn" class="btn btn-secondary" aria-label="Open debug logs viewer in new tab">🐛 View Debug Logs</button>
+    </div>
+
+    <!-- Test Results Pop-up (modal overlay) -->
+    <div id="test-results-overlay" class="modal-overlay hidden">
+      <div id="test-results" class="test-results-popup">
+        <h3>API Test Results</h3>
+        <div id="test-results-content"></div>
+        <button id="close-test-results" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>💡 Tip: Only enable modules you need to avoid hitting rate limits</p>
+      <p>🔒 API keys are stored locally in your browser and never sent to external servers</p>
+    </footer>
+  </div>
+
+  <script src="../crypto-utils.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
