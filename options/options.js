@@ -655,47 +655,16 @@ async function deactivateProLicense() {
 }
 
 /**
- * Verify license key with Gumroad API
+ * Verify license key with Gumroad API (via Vercel endpoint)
  * @param {string} licenseKey - The license key to verify
  * @returns {Promise<boolean>} true if valid
  */
 async function verifyLicenseWithGumroad(licenseKey) {
-  // TODO: Add Gumroad API credentials here
-  const GUMROAD_PRODUCT_ID = ''; // TO BE PROVIDED
-  const GUMROAD_API_URL = 'https://api.gumroad.com/v2/licenses/verify';
-
-  if (!GUMROAD_PRODUCT_ID) {
-    console.error('[License] Gumroad Product ID not configured');
-    throw new Error('License verification not configured. Please contact support.');
-  }
-
   try {
-    const response = await fetch(GUMROAD_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        product_id: GUMROAD_PRODUCT_ID,
-        license_key: licenseKey,
-        increment_uses_count: false
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Gumroad API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    // Check if license is valid and not refunded
-    return data.success &&
-           data.purchase &&
-           data.purchase.refunded === false &&
-           data.purchase.chargebacked === false;
-
+    const result = await LicenseManager.verifyLicense(licenseKey);
+    return result.valid;
   } catch (error) {
-    console.error('[Gumroad] Verification failed:', error);
+    console.error('[License] Verification failed:', error);
     throw new Error('License verification failed. Please check your connection and try again.');
   }
 }
