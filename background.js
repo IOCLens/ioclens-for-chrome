@@ -55,9 +55,9 @@ const PRIVATE_IP_RANGES = [
 // Defanging replacements
 const DEFANG_REPLACEMENTS = [
   [/h[xX]{2}p/g, 'http'],
-  [/\\[:\\]/g, ':'],
-  [/\\[\\.\\]/g, '.'],
-  [/\\[dot\\]/g, '.']
+  [/\[:\]/g, ':'],
+  [/\[\.\]/g, '.'],
+  [/\[dot\]/g, '.']
 ];
 
 /**
@@ -87,7 +87,7 @@ const extractDomainFromURL = (url) => {
   try {
     return new URL(refangIOC(url)).hostname;
   } catch {
-    return url.match(/(?:https?|ftp):\\/\\/([^/:?\\s]+)/i)?.[1] ?? null;
+    return url.match(/(?:https?|ftp):\/\/([^/:?\s]+)/i)?.[1] ?? null;
   }
 };
 
@@ -214,14 +214,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       switch (validation.reason) {
         case 'private_ip':
           title = '⚠️ Private IP Address';
-          message = `"${truncatedText}" is a private/reserved IP address.\\n\\nPrivate IPs cannot be enriched with threat intelligence.`;
+          message = `"${truncatedText}" is a private/reserved IP address.\n\nPrivate IPs cannot be enriched with threat intelligence.`;
           break;
         case 'too_long':
           title = '❌ Text Too Long';
-          message = `Selected text is too long (max ${MAX_IOC_LENGTH} characters).\\n\\nPlease select only the IOC itself.`;
+          message = `Selected text is too long (max ${MAX_IOC_LENGTH} characters).\n\nPlease select only the IOC itself.`;
           break;
         default:
-          message = `"${truncatedText}" is not a valid IOC.\\n\\nSupported types:\\n• Public IPv4 addresses\\n• Domains\\n• URLs\\n• SHA256 hashes`;
+          message = `"${truncatedText}" is not a valid IOC.\n\nSupported types:\n• Public IPv4 addresses\n• Domains\n• URLs\n• SHA256 hashes`;
       }
 
       chrome.notifications.create({
