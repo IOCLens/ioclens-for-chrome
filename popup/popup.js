@@ -1652,8 +1652,7 @@ function updateUIForProStatus(isProUser) {
  * Open Gumroad purchase page (placeholder URL)
  */
 function openGumroadPurchase() {
-  // PLACEHOLDER: Replace with actual Gumroad product URL
-  const gumroadURL = 'https://gumroad.com/your-product-url-here';
+  const gumroadURL = 'https://ioclens.gumroad.com/l/dworo';
   chrome.tabs.create({ url: gumroadURL, active: true });
   Logger.logUI('Gumroad purchase clicked', { url: gumroadURL });
 }

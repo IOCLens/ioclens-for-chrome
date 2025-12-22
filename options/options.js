@@ -583,8 +583,7 @@ function toggleProKeyVisibility() {
  * Open Gumroad purchase page (placeholder)
  */
 function openGumroadPurchase() {
-  // PLACEHOLDER: Replace with actual Gumroad product URL
-  const gumroadURL = 'https://gumroad.com/your-product-url-here';
+  const gumroadURL = 'https://ioclens.gumroad.com/l/dworo';
   window.open(gumroadURL, '_blank');
 }
 
