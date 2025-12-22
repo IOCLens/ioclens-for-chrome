@@ -25,20 +25,20 @@ const MAX_IOC_LENGTH = 500; // SECURITY: Prevent ReDoS attacks
 
 const IOC_PATTERNS = {
   // IPv4: Simple pattern without nested quantifiers
-  ipv4: /(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/,
+  ipv4: /(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/,
 
   // URL: Simplified pattern with bounded quantifiers
-  url: /(?:https?|ftp):\\/\\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?){0,10}\\.[a-z]{2,}(?::[0-9]{1,5})?(?:\\/[^\\s]{0,2048})?/i,
+  url: /(?:https?|ftp):\/\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?){0,10}\.[a-z]{2,}(?::[0-9]{1,5})?(?:\/[^\s]{0,2048})?/i,
 
   // Domain: Simplified with explicit limits
-  domain: /[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?){0,10}\\.(?:[a-z]{2,}|onion)/i,
+  domain: /[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?){0,10}\.(?:[a-z]{2,}|onion)/i,
 
   // SHA256 hash: 64 hexadecimal characters
   sha256: /^[a-f0-9]{64}$/i,
 
   // Defanged patterns
-  defangedUrl: /h[xX]{2}p[s]?(?:\\[:\\]|:)\\/\\/[^\\s]{1,500}/,
-  defangedDomain: /[a-z0-9-]{1,63}(?:\\[\\.\\]|\\.)[a-z0-9-]{1,63}(?:\\[\\.\\]|\\.)(?:[a-z]{2,}|onion)/i
+  defangedUrl: /h[xX]{2}p[s]?(?:\[:\]|:)\/\/[^\s]{1,500}/,
+  defangedDomain: /[a-z0-9-]{1,63}(?:\[\.\]|\.)[a-z0-9-]{1,63}(?:\[\.\]|\.)(?:[a-z]{2,}|onion)/i
 };
 
 // Private IP ranges (RFC1918 + special use)
