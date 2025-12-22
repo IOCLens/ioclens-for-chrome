@@ -28,7 +28,8 @@
     "https://urlhaus-api.abuse.ch/*",
     "https://threatfox-api.abuse.ch/*",
     "https://otx.alienvault.com/*",
-    "https://api.greynoise.io/*"
+    "https://api.greynoise.io/*",
+    "https://ioclens-for-chrome.vercel.app/*"
   ],
 
   "background": {
@@ -48,7 +49,7 @@
   "options_page": "options/options.html",
 
   "content_security_policy": {
-    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; connect-src 'self' http://ip-api.com https://ip-api.com https://ipapi.co https://www.virustotal.com https://api.abuseipdb.com https://api.shodan.io https://urlhaus-api.abuse.ch https://threatfox-api.abuse.ch https://otx.alienvault.com https://api.greynoise.io"
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; connect-src 'self' http://ip-api.com https://ip-api.com https://ipapi.co https://www.virustotal.com https://api.abuseipdb.com https://api.shodan.io https://urlhaus-api.abuse.ch https://threatfox-api.abuse.ch https://otx.alienvault.com https://api.greynoise.io https://ioclens-for-chrome.vercel.app"
   },
 
   "minimum_chrome_version": "88"

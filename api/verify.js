@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     if (data.success && !data.purchase.refunded && !data.purchase.chargebacked) {
       return res.status(200).json({ success: true });
     } else {
-      return res.status(403).json({ success: false, message: 'Invalid license' });
+      return res.status(200).json({ success: false, message: 'Invalid license' });
     }
   } catch (error) {
     console.error(error);
