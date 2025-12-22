@@ -842,7 +842,6 @@ function extractTags(apiResults) {
     malwareFamilies: new Set(),
     threatTypes: new Set(),
     categories: new Set(),
-    cves: new Set(),
     generalTags: new Set(),
     attackIds: new Set()
   };
@@ -883,11 +882,8 @@ function extractTags(apiResults) {
     apiResults.greynoise.tags.forEach(tag => tags.generalTags.add(tag));
   }
 
-  // Shodan CVEs and tags
+  // Shodan tags
   if (apiResults.shodan) {
-    if (apiResults.shodan.vulns) {
-      Object.keys(apiResults.shodan.vulns).forEach(cve => tags.cves.add(cve));
-    }
     if (apiResults.shodan.tags && Array.isArray(apiResults.shodan.tags)) {
       apiResults.shodan.tags.forEach(tag => tags.generalTags.add(tag));
     }
@@ -953,7 +949,6 @@ function extractTags(apiResults) {
     malwareFamilies: Array.from(tags.malwareFamilies).sort(),
     threatTypes: Array.from(tags.threatTypes).sort(),
     categories: Array.from(tags.categories).sort(),
-    cves: Array.from(tags.cves).sort(),
     generalTags: Array.from(tags.generalTags).sort(),
     attackIds: Array.from(tags.attackIds).sort()
   };
@@ -1287,7 +1282,6 @@ function displayTags(tags) {
     { containerId: 'malware-families-container', listId: 'malware-families-list', data: tags.malwareFamilies, cssClass: 'tag-malware' },
     { containerId: 'threat-types-container', listId: 'threat-types-list', data: tags.threatTypes, cssClass: 'tag-threat' },
     { containerId: 'categories-container', listId: 'categories-list', data: tags.categories, cssClass: 'tag-category-item' },
-    { containerId: 'cves-container', listId: 'cves-list', data: tags.cves, cssClass: 'tag-cve' },
     { containerId: 'attack-ids-container', listId: 'attack-ids-list', data: tags.attackIds, cssClass: 'tag-attack' },
     { containerId: 'general-tags-container', listId: 'general-tags-list', data: tags.generalTags, cssClass: 'tag-general' }
   ];
