@@ -1,11 +1,12 @@
 # 🛡️ IoCLens - SOC Threat Intel Enrichment
 
-![Available in the Chrome Web Store](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) **Get it on Chrome Web Store**](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
+
 ![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Chrome](https://img.shields.io/badge/platform-Chrome%20%7C%20Edge-success.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
+[![Available in the Chrome Web Store](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) **Get it on Chrome Web Store**](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
 
 Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOCs) during SOC investigations. Save time by aggregating multiple threat intelligence sources in one click.
 
