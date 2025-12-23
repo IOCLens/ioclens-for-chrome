@@ -17,6 +17,9 @@ Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOC
 - **Privacy-First**: Zero telemetry. Requests are sent directly from your browser to providers.
 - **PRO Features**: CSV export, priority support, and advanced sources (Shodan, GreyNoise, ...).
 
+## Instructions
+- **Get a free API key** on https://www.virustotal.com/
+- **Set the key in settings**
 
 ## Screenshots
 
