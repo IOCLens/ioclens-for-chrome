@@ -17,10 +17,6 @@ Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOC
 - **Privacy-First**: Zero telemetry. Requests are sent directly from your browser to providers.
 - **PRO Features**: CSV export, priority support, and advanced sources (Shodan, GreyNoise, ...).
 
-## Installation (Dev Mode)
-1. Open `chrome://extensions/`
-2. Enable **"Developer mode"**
-3. Click **"Load unpacked"** and select the extension folder.
 
 ## Screenshots
 
