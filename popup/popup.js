@@ -154,15 +154,29 @@ const API_REGISTRY = {
   otx: {
     name: 'AlienVault OTX',
     icon: '👽',
-    supports: ['domain', 'ipv4'],
+    supports: ['domain', 'ipv4', 'sha256'],
     requiresKey: true,
     weight: 1.2,
     buildUrl: (ioc, key, type) => {
-      const indicator = type === 'ipv4' ? 'IPv4' : 'domain';
+      let indicator;
+      if (type === 'ipv4') {
+        indicator = 'IPv4';
+      } else if (type === 'sha256') {
+        indicator = 'file';
+      } else {
+        indicator = 'domain';
+      }
       return `https://otx.alienvault.com/api/v1/indicators/${indicator}/${ioc}/general`;
     },
     buildWebUrl: (ioc, type) => {
-      const indicator = type === 'ipv4' ? 'IPv4' : 'domain';
+      let indicator;
+      if (type === 'ipv4') {
+        indicator = 'IPv4';
+      } else if (type === 'sha256') {
+        indicator = 'file';
+      } else {
+        indicator = 'domain';
+      }
       return `https://otx.alienvault.com/indicator/${indicator}/${ioc}`;
     },
     headers: (key) => ({ 'X-OTX-API-KEY': key }),
@@ -235,10 +249,19 @@ const VERDICT_RULES = {
 
   threatfox: (data) => {
     // ThreatFox returns { query_status: "ok", data: [...] } or { query_status: "no_result" }
-    if (data.query_status === 'ok' && data.data && data.data.length > 0) {
+    // Check if we have valid data array with results
+    if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
       const iocCount = data.data.length;
-      return { verdict: 'malicious', score: 100, detail: `${iocCount} IOC(s) in threat database` };
+      // Get confidence level from first IOC if available
+      const firstIoc = data.data[0];
+      const confidenceLevel = firstIoc?.confidence_level || 'unknown';
+      return { verdict: 'malicious', score: 100, detail: `${iocCount} IOC(s) - ${confidenceLevel} confidence` };
     }
+    // Check for explicit "ok" status with no data
+    if (data && data.query_status === 'ok') {
+      return { verdict: 'unknown', score: 0, detail: 'Found but no IOCs' };
+    }
+    // "no_result" or no data
     return { verdict: 'unknown', score: 0, detail: 'Not in database (blacklist only)' };
   },
 
@@ -936,10 +959,32 @@ function extractTags(apiResults) {
         pulse.tags.forEach(tag => tags.generalTags.add(tag));
       }
       if (pulse.malware_families && Array.isArray(pulse.malware_families)) {
-        pulse.malware_families.forEach(family => tags.malwareFamilies.add(family));
+        pulse.malware_families.forEach(family => {
+          // malware_families can be objects with display_name or strings
+          if (typeof family === 'object' && family !== null) {
+            const familyName = family.display_name || family.name || JSON.stringify(family);
+            if (familyName) tags.malwareFamilies.add(familyName);
+          } else if (typeof family === 'string') {
+            tags.malwareFamilies.add(family);
+          }
+        });
       }
       if (pulse.attack_ids && Array.isArray(pulse.attack_ids)) {
-        pulse.attack_ids.forEach(id => tags.attackIds.add(id));
+        pulse.attack_ids.forEach(id => {
+          // attack_ids can be objects with id and name properties or strings
+          if (typeof id === 'object' && id !== null) {
+            // Format: "T1234: Technique Name" or just "T1234" if no name
+            const attackId = id.id || id.attack_id;
+            const attackName = id.name || id.display_name;
+            if (attackId && attackName) {
+              tags.attackIds.add(`${attackId}: ${attackName}`);
+            } else if (attackId) {
+              tags.attackIds.add(attackId);
+            }
+          } else if (typeof id === 'string') {
+            tags.attackIds.add(id);
+          }
+        });
       }
     });
   }
@@ -1314,7 +1359,16 @@ function displayTags(tags) {
 
 function displayTechnicalDetails(technical, ioc) {
   if (technical?.firstSeen && technical?.firstSeenSource) {
-    const dateStr = technical.firstSeen.toLocaleString();
+    // Handle both Date objects and date strings (from cache)
+    let dateStr;
+    if (technical.firstSeen instanceof Date) {
+      dateStr = technical.firstSeen.toLocaleString();
+    } else if (typeof technical.firstSeen === 'string' || typeof technical.firstSeen === 'number') {
+      // Date was serialized to string/number in cache, convert back
+      dateStr = new Date(technical.firstSeen).toLocaleString();
+    } else {
+      dateStr = String(technical.firstSeen);
+    }
     document.getElementById('tech-first-seen').textContent = `${dateStr} (${technical.firstSeenSource})`;
   } else {
     document.getElementById('tech-first-seen').textContent = '-';

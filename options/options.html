@@ -7,13 +7,17 @@
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
+  <!-- Fixed Top Status Banner -->
+  <div class="status-banner hidden" id="status-banner">
+    <span id="status-banner-message"></span>
+    <button class="status-banner-close" id="status-banner-close" aria-label="Close status message">✕</button>
+  </div>
+
   <div class="container">
     <header>
       <h1>🔍 SOC Threat Intel Extension - Settings</h1>
       <p>Configure your API keys and enable/disable enrichment modules</p>
     </header>
-
-    <div class="status-message hidden" id="status-message"></div>
 
     <!-- PRO License Section -->
     <div class="pro-license-section">
@@ -43,7 +47,6 @@
       <div class="license-input-compact">
         <input type="text" id="pro-license-input" placeholder="Enter license key" />
         <button id="activate-pro-btn" class="btn btn-primary">Activate</button>
-        <div id="license-activation-status" class="license-status"></div>
       </div>
     </div>
 

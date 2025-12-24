@@ -95,6 +95,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   }
+
+  // Event listener for status banner close button
+  const statusBannerClose = document.getElementById('status-banner-close');
+  if (statusBannerClose) {
+    statusBannerClose.addEventListener('click', () => {
+      const statusBanner = document.getElementById('status-banner');
+      statusBanner.classList.add('hidden');
+      // Clear timeout if manually closed
+      if (statusBannerTimeout) {
+        clearTimeout(statusBannerTimeout);
+      }
+    });
+  }
 });
 
 /**
@@ -356,7 +369,7 @@ async function testAPIs() {
             result = await testThreatFox(testIP, settings.key);
             break;
           case 'otx':
-            result = await testOTX('google.com', settings.key); // OTX requires domain
+            result = await testOTX(testIP, settings.key); // OTX supports both IP and domain
             break;
           default:
             result = { error: 'Unknown API module' };
@@ -485,7 +498,20 @@ const testThreatFox = async (ip, key) => {
   }
   return { error: data.query_status };
 };
-const testOTX = (domain, key) => testAPI(`https://otx.alienvault.com/api/v1/indicators/domain/${domain}/general`, { 'X-OTX-API-KEY': key });
+const testOTX = (ioc, key) => {
+  // Detect if it's an IP, hash, or domain
+  const isIP = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ioc);
+  const isSHA256 = /^[a-f0-9]{64}$/i.test(ioc);
+  let indicator;
+  if (isIP) {
+    indicator = 'IPv4';
+  } else if (isSHA256) {
+    indicator = 'file';
+  } else {
+    indicator = 'domain';
+  }
+  return testAPI(`https://otx.alienvault.com/api/v1/indicators/${indicator}/${ioc}/general`, { 'X-OTX-API-KEY': key });
+};
 
 const getConfig = async () => {
   const { apiConfig } = await chrome.storage.local.get(['apiConfig']);
@@ -501,12 +527,25 @@ const getConfig = async () => {
   }
 };
 
+let statusBannerTimeout = null;
+
 const showStatus = (message, type) => {
-  const statusDiv = document.getElementById('status-message');
-  statusDiv.textContent = message;
-  statusDiv.className = `status-message ${type}`;
-  statusDiv.classList.remove('hidden');
-  setTimeout(() => statusDiv.classList.add('hidden'), 3000);
+  const statusBanner = document.getElementById('status-banner');
+  const statusMessage = document.getElementById('status-banner-message');
+
+  // Clear any existing timeout
+  if (statusBannerTimeout) {
+    clearTimeout(statusBannerTimeout);
+  }
+
+  statusMessage.textContent = message;
+  statusBanner.className = `status-banner ${type}`;
+  statusBanner.classList.remove('hidden');
+
+  // Auto-hide after 5 seconds
+  statusBannerTimeout = setTimeout(() => {
+    statusBanner.classList.add('hidden');
+  }, 5000);
 };
 
 const openLogsPage = () => chrome.tabs.create({ url: chrome.runtime.getURL('logs/logs.html') });
@@ -592,18 +631,15 @@ function openGumroadPurchase() {
  */
 async function activateProLicense() {
   const input = document.getElementById('pro-license-input');
-  const statusDiv = document.getElementById('license-activation-status');
   const licenseKey = input.value.trim();
 
   if (!licenseKey) {
-    statusDiv.textContent = '❌ Please enter a license key';
-    statusDiv.className = 'license-status error';
+    showStatus('❌ Please enter a license key', 'error');
     return;
   }
 
   try {
-    statusDiv.textContent = '⏳ Verifying license...';
-    statusDiv.className = 'license-status loading';
+    showStatus('⏳ Verifying license...', 'success');
 
     // Verify license with Gumroad API
     const isValid = await verifyLicenseWithGumroad(licenseKey);
@@ -611,9 +647,6 @@ async function activateProLicense() {
     if (isValid) {
       // Store license key
       await chrome.storage.local.set({ proLicenseKey: licenseKey });
-
-      statusDiv.textContent = '✅ PRO activated successfully!';
-      statusDiv.className = 'license-status success';
 
       // Update UI
       await loadProStatus();
@@ -623,15 +656,11 @@ async function activateProLicense() {
 
       showStatus('✅ PRO license activated successfully!', 'success');
     } else {
-      statusDiv.textContent = '❌ Invalid license key';
-      statusDiv.className = 'license-status error';
       showStatus('❌ Invalid license key', 'error');
     }
   } catch (error) {
     console.error('[License] Activation error:', error);
-    statusDiv.textContent = `❌ ${error.message}`;
-    statusDiv.className = 'license-status error';
-    showStatus('❌ License verification failed', 'error');
+    showStatus(`❌ License verification failed: ${error.message}`, 'error');
   }
 }
 
