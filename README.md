@@ -1,7 +1,7 @@
 # 🛡️ IoCLens - SOC Threat Intel Enrichment
 
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)
 ![Chrome](https://img.shields.io/badge/platform-Chrome%20%7C%20Edge-success.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
