@@ -1,0 +1,303 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(30, 41, 59, 0.95);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+h1 {
+  font-size: 32px;
+  color: #60a5fa;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 8px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 13px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+select, input[type="text"] {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+select:hover, input[type="text"]:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+select:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.button-group {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(71, 85, 105, 0.8);
+  color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: rgba(71, 85, 105, 1);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 8px;
+  justify-content: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.logs-container {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.log-entry {
+  background: rgba(30, 41, 59, 0.6);
+  border-left: 4px solid;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.2s;
+}
+
+.log-entry:hover {
+  background: rgba(30, 41, 59, 0.9);
+  transform: translateX(4px);
+}
+
+.log-entry.API_REQUEST { border-left-color: #3b82f6; }
+.log-entry.API_RESPONSE { border-left-color: #10b981; }
+.log-entry.API_ERROR { border-left-color: #ef4444; }
+.log-entry.ENRICHMENT { border-left-color: #8b5cf6; }
+.log-entry.IOC { border-left-color: #f59e0b; }
+.log-entry.UI { border-left-color: #06b6d4; }
+.log-entry.CACHE { border-left-color: #84cc16; }
+.log-entry.CONTEXT_MENU { border-left-color: #ec4899; }
+.log-entry.SYSTEM { border-left-color: #6366f1; }
+.log-entry.ERROR { border-left-color: #dc2626; }
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.log-timestamp {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.log-category {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.log-category.API_REQUEST { background: #1e40af; color: #dbeafe; }
+.log-category.API_RESPONSE { background: #065f46; color: #d1fae5; }
+.log-category.API_ERROR { background: #991b1b; color: #fee2e2; }
+.log-category.ENRICHMENT { background: #5b21b6; color: #ede9fe; }
+.log-category.IOC { background: #b45309; color: #fef3c7; }
+.log-category.UI { background: #155e75; color: #cffafe; }
+.log-category.CACHE { background: #4d7c0f; color: #ecfccb; }
+.log-category.CONTEXT_MENU { background: #9f1239; color: #fce7f3; }
+.log-category.SYSTEM { background: #4338ca; color: #e0e7ff; }
+.log-category.ERROR { background: #7f1d1d; color: #fecaca; }
+
+.log-message {
+  color: #e2e8f0;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.log-data {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #cbd5e1;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.log-data-toggle {
+  background: rgba(96, 165, 250, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #60a5fa;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.log-data-toggle:hover {
+  background: rgba(96, 165, 250, 0.3);
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+.log-data.collapsed {
+  display: none;
+}
+
+/* Scrollbar styling */
+.logs-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.logs-container::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 5px;
+}
+
+.logs-container::-webkit-scrollbar-thumb {
+  background: rgba(96, 165, 250, 0.3);
+  border-radius: 5px;
+}
+
+.logs-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.5);
+}
+
+/* Highlight for search results */
+.highlight {
+  background: rgba(251, 191, 36, 0.3);
+  padding: 2px 4px;
+  border-radius: 2px;
+}

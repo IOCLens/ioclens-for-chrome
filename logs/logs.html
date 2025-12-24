@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Logs - Threat Intel Extension</title>
+  <link rel="stylesheet" href="logs.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🐛 Debug Logs</h1>
+      <p class="subtitle">Detailed logging of all API calls and extension activity</p>
+    </header>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="category-filter">Filter by Category:</label>
+        <select id="category-filter" aria-label="Filter logs by category">
+          <option value="all">All Categories</option>
+          <option value="API_REQUEST">API Requests</option>
+          <option value="API_RESPONSE">API Responses</option>
+          <option value="API_ERROR">API Errors</option>
+          <option value="ENRICHMENT">Enrichment</option>
+          <option value="IOC">IOC Validation</option>
+          <option value="UI">UI Events</option>
+          <option value="CACHE">Cache Operations</option>
+          <option value="CONTEXT_MENU">Context Menu</option>
+          <option value="SYSTEM">System</option>
+          <option value="ERROR">Errors</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="log-limit">Show last:</label>
+        <select id="log-limit" aria-label="Limit number of log entries displayed">
+          <option value="50">50 entries</option>
+          <option value="100" selected>100 entries</option>
+          <option value="200">200 entries</option>
+          <option value="500">500 entries (all)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <input type="text" id="search-input" placeholder="Search logs..." aria-label="Search logs by message or data content" />
+      </div>
+
+      <div class="button-group">
+        <button id="refresh-btn" class="btn btn-primary" aria-label="Refresh log entries from storage">🔄 Refresh</button>
+        <button id="export-json-btn" class="btn btn-secondary" aria-label="Export all logs as JSON file">📥 Export JSON</button>
+        <button id="export-text-btn" class="btn btn-secondary" aria-label="Export all logs as plain text file">📄 Export TXT</button>
+        <button id="clear-cache-btn" class="btn btn-secondary" aria-label="Clear all cached enrichment data">🧹 Clear Cache</button>
+        <button id="clear-btn" class="btn btn-danger" aria-label="Permanently delete all log entries">🗑️ Clear Logs</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">Total Entries:</span>
+        <span id="total-count" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Filtered:</span>
+        <span id="filtered-count" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">API Errors:</span>
+        <span id="error-count" class="stat-value">0</span>
+      </div>
+    </div>
+
+    <div id="logs-container" class="logs-container">
+      <div class="empty-state">
+        <p>No logs available. Use the extension to generate logs.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../logger.js"></script>
+  <script src="logs.js"></script>
+</body>
+</html>
