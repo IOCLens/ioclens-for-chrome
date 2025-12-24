@@ -32,6 +32,8 @@ While the core logic is open-source for transparency, the **Official Chrome Stor
 
 [<img src="https://developer.chrome.com/static/images/badges/en/promote_badge_large.png" alt="Available in the Chrome Web Store" width="200">](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
 
+Buying a license is the best way to support the development of this tool and keep it privacy-first.
+
 ## Instructions
 
 - **Get a free API key** on https://www.virustotal.com/
