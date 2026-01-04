@@ -10,7 +10,7 @@
   <div class="container">
     <!-- PRO Upgrade Banner -->
     <div class="pro-banner">
-      <span class="pro-text">Upgrade to PRO for advanced threat intelligence sources</span>
+      <span class="pro-text">FREE: VirusTotal, ip-api, InternetDB, GreyNoise • PRO unlocks all sources</span>
       <button id="gumroad-purchase" class="btn-gumroad">Get PRO</button>
     </div>
 
@@ -24,10 +24,15 @@
     <!-- Header -->
     <div class="header">
       <div class="header-top">
-        <h1><span aria-hidden="true">🔍</span> Threat Intel Enrichment</h1>
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
-          <span class="theme-icon">☀️</span>
-        </button>
+        <h1><span aria-hidden="true">🔍</span> IOCLens Threat Intel Enrichment</h1>
+        <div class="header-buttons">
+          <button id="settings-btn" class="settings-btn" aria-label="Open settings" title="Settings">
+            <span class="settings-icon">⚙️</span>
+          </button>
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <span class="theme-icon">☀️</span>
+          </button>
+        </div>
       </div>
       <div id="ioc-display" class="ioc-value">
         <span id="ioc-text">Right-click on an IP, domain, or hash and select "Enrich IOC"</span>
@@ -151,6 +156,7 @@
       <!-- Actions -->
       <div class="actions">
         <button id="copy-json" class="btn btn-primary" aria-label="Copy enrichment data as JSON to clipboard">📋 Copy JSON</button>
+        <button id="export-json" class="btn btn-primary" aria-label="Export enrichment data as JSON file">💾 Export JSON</button>
         <button id="refresh" class="btn btn-secondary" aria-label="Refresh enrichment data by clearing cache and re-querying APIs">🔄 Refresh</button>
       </div>
     </div>

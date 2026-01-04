@@ -9,7 +9,7 @@
 const DEFAULT_CONFIG = {
   modules: {
     ipapi: { enabled: true, key: '' },  // Enabled by default (free geolocation)
-    ipapiCo: { enabled: false, key: '' },
+    internetdb: { enabled: true, key: '' },  // Enabled by default (free Shodan service)
     virustotal: { enabled: false, key: '' },
     abuseipdb: { enabled: false, key: '' },
     shodan: { enabled: false, key: '' },
@@ -225,7 +225,7 @@ async function saveSettings() {
 
     // Collecter tous les modules
     const modules = [
-      'ipapi', 'ipapiCo', 'virustotal', 'abuseipdb',
+      'ipapi', 'internetdb', 'virustotal', 'abuseipdb',
       'shodan', 'urlhaus', 'threatfox', 'otx', 'greynoise'
     ];
 

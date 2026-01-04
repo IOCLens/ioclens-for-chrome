@@ -28,17 +28,14 @@ const API_REGISTRY = {
     buildWebUrl: (ioc) => `https://ip-api.com/#${ioc}`,
     timeout: 8000 // Increased from 5000 - ip-api.com can be slow
   },
-  ipapiCo: {
-    name: 'ipapi.co',
-    icon: '🌍',
+  internetdb: {
+    name: 'InternetDB',
+    icon: '🔎',
     supports: ['ipv4'],
-    requiresKey: false,
-    weight: 0, // Geolocation only, no reputation
-    buildUrl: (ioc, key) => {
-      const keyParam = key ? `?key=${key}` : '';
-      return `https://ipapi.co/${ioc}/json/${keyParam}`;
-    },
-    buildWebUrl: (ioc) => `https://ipapi.co/${ioc}`,
+    requiresKey: false, // Completely free, no API key needed
+    weight: 1.0,
+    buildUrl: (ioc) => `https://internetdb.shodan.io/${ioc}`,
+    buildWebUrl: (ioc) => `https://www.shodan.io/host/${ioc}`,
     timeout: 5000
   },
   virustotal: {
@@ -216,6 +213,36 @@ const VERDICT_RULES = {
     return classMap[data.classification] || { verdict: 'clean', score: 0, detail: 'Not seen' };
   },
 
+  internetdb: (data) => {
+    // InternetDB returns: ports, cpes, vulns (CVEs), tags, hostnames
+    const vulns = Array.isArray(data.vulns) ? data.vulns.length : 0;
+    const ports = Array.isArray(data.ports) ? data.ports.length : 0;
+    const tags = Array.isArray(data.tags) ? data.tags : [];
+
+    // Check for malicious tags
+    const maliciousTags = ['malware', 'compromised', 'botnet', 'ransomware', 'backdoor'];
+    const hasMaliciousTags = tags.some(tag => maliciousTags.some(mal => tag.toLowerCase().includes(mal)));
+
+    if (hasMaliciousTags) {
+      return { verdict: 'malicious', score: 90, detail: `Tagged: ${tags.join(', ')}` };
+    }
+
+    if (vulns > 10) {
+      return { verdict: 'suspicious', score: 70, detail: `${vulns} CVEs, ${ports} ports, tags: ${tags.join(', ') || 'none'}` };
+    }
+    if (vulns > 0) {
+      return { verdict: 'suspicious', score: 40, detail: `${vulns} CVE(s), ${ports} ports` };
+    }
+
+    if (ports > 0) {
+      const details = [`${ports} port(s)`];
+      if (tags.length > 0) details.push(`tags: ${tags.join(', ')}`);
+      return { verdict: 'clean', score: 0, detail: details.join(', ') };
+    }
+
+    return { verdict: 'unknown', score: 0, detail: 'No data available' };
+  },
+
   urlhaus: (data) => {
     // URLhaus is a blacklist only - "not found" doesn't mean clean, it means unknown
     if (data.query_status === 'ok') {
@@ -305,8 +332,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   document.getElementById('copy-json').addEventListener('click', copyJSON);
+  document.getElementById('export-json').addEventListener('click', exportJSON);
   document.getElementById('refresh').addEventListener('click', refreshData);
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('settings-btn').addEventListener('click', openSettings);
 
   // License management event listeners
   document.getElementById('gumroad-purchase').addEventListener('click', openGumroadPurchase);
@@ -332,18 +361,18 @@ async function loadAPIConfig() {
       API_CONFIG = await CryptoUtils.decryptConfig(result.apiConfig);
       console.log('[Config] Configuration chargée et décryptée');
     } else {
-      // Default config: Free users only get VirusTotal
+      // Default config: Free users get VirusTotal, ipapi, InternetDB, and GreyNoise
       API_CONFIG = {
         modules: {
-          ipapi: { enabled: isProUser, key: '' },
-          ipapiCo: { enabled: false, key: '' },
+          ipapi: { enabled: true, key: '' }, // FREE - geolocation (45 req/min)
+          internetdb: { enabled: true, key: '' }, // FREE - Shodan InternetDB (no limits)
           virustotal: { enabled: true, key: '' }, // FREE - Always enabled
           abuseipdb: { enabled: isProUser, key: '' },
           shodan: { enabled: isProUser, key: '' },
           urlhaus: { enabled: isProUser, key: '' },
           threatfox: { enabled: isProUser, key: '' },
           otx: { enabled: isProUser, key: '' },
-          greynoise: { enabled: isProUser, key: '' }
+          greynoise: { enabled: true, key: '' } // FREE - Community API (50 req/week)
         }
       };
       console.log('[Config] Using default config (PRO:', isProUser, ')');
@@ -352,9 +381,10 @@ async function loadAPIConfig() {
     // Enforce free tier limitations
     if (!isProUser) {
       console.log('[Config] Applying FREE tier restrictions');
-      // Only VirusTotal is enabled for free users
+      // Free tier: VirusTotal, ipapi, InternetDB, and GreyNoise (all have free APIs)
+      const freeAPIs = ['virustotal', 'ipapi', 'internetdb', 'greynoise'];
       for (const [apiName, config] of Object.entries(API_CONFIG.modules)) {
-        if (apiName !== 'virustotal') {
+        if (!freeAPIs.includes(apiName)) {
           config.enabled = false;
         }
       }
@@ -364,15 +394,15 @@ async function loadAPIConfig() {
     // Fallback to free tier config on error
     API_CONFIG = {
       modules: {
-        ipapi: { enabled: false, key: '' },
-        ipapiCo: { enabled: false, key: '' },
-        virustotal: { enabled: true, key: '' },
+        ipapi: { enabled: true, key: '' }, // FREE - geolocation (45 req/min)
+        internetdb: { enabled: true, key: '' }, // FREE - Shodan InternetDB (no limits)
+        virustotal: { enabled: true, key: '' }, // FREE - Always enabled
         abuseipdb: { enabled: false, key: '' },
         shodan: { enabled: false, key: '' },
         urlhaus: { enabled: false, key: '' },
         threatfox: { enabled: false, key: '' },
         otx: { enabled: false, key: '' },
-        greynoise: { enabled: false, key: '' }
+        greynoise: { enabled: true, key: '' } // FREE - Community API (50 req/week)
       }
     };
   }
@@ -408,13 +438,15 @@ async function callAPI(apiName, ioc) {
   const url = spec.buildUrl(iocValue, config.key, iocType, ioc);
   const method = spec.method || 'GET';
 
-  // Build headers - only call headers function if we have a key OR if API doesn't require one
+  // Build headers - handle both required and optional API keys
   let headers = {};
   if (spec.headers) {
     if (spec.requiresKey && config.key) {
+      // API requires key and we have one
       headers = spec.headers(config.key);
     } else if (!spec.requiresKey) {
-      headers = spec.headers();
+      // API has optional key - pass it if available
+      headers = spec.headers(config.key);
     }
   }
 
@@ -436,33 +468,45 @@ async function callAPI(apiName, ioc) {
     const duration = Date.now() - startTime;
 
     if (!response.ok) {
-      // Try to get error message from response body
+      // 404 means no data found, not an error - this is normal for threat intel APIs
+      // Return empty object so it still shows in verdicts as "No information available"
+      if (response.status === 404) {
+        await Logger.logAPIResponse(apiName, true, { noData: true, reason: 'No information available', status: 404 }, duration);
+        return {};  // Empty object will trigger "No data available" verdict
+      }
+
+      // Try to get error message from response body for other errors
       let errorMessage = null;
       try {
         const errorData = await response.json();
+        // Check for various error message formats (error, detail, message)
         if (errorData.error) {
           errorMessage = errorData.error;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
         }
       } catch (e) {
         // JSON parsing failed, use generic error
       }
 
       const error = errorMessage ? new Error(errorMessage) : createAPIError(response.status, apiName);
-      if (error) {
-        // Don't log normal API responses like rate limits (429) or permission errors (403) as errors
-        // These are expected responses that we handle gracefully in the UI
-        const isExpectedError = response.status === 429 || response.status === 403;
-        if (!isExpectedError) {
-          await Logger.logAPIError(apiName, error, { status: response.status, duration });
-        }
-        throw error;
+      // Don't log normal API responses like rate limits (429) or permission errors (403) as errors
+      // These are expected responses that we handle gracefully in the UI
+      const isExpectedError = response.status === 429 || response.status === 403;
+      if (!isExpectedError && error) {
+        await Logger.logAPIError(apiName, error, { status: response.status, duration });
       }
-      // If error is null, it means no data available (404), which is normal - not an error
-      await Logger.logAPIResponse(apiName, true, { noData: true, reason: 'No information available (normal)', status: 404 }, duration);
-      return null;
+      throw error;
     }
 
     const data = await response.json();
+
+    // Debug log for InternetDB
+    if (apiName === 'internetdb') {
+      console.log('[InternetDB] Raw response:', data);
+    }
 
     // Only reject if it's an actual error (not just "no results found")
     if (data.status === 'fail') {
@@ -745,20 +789,6 @@ const extractGeolocation = (apiResults) => {
     });
   }
 
-  if (apiResults.ipapiCo) {
-    const d = apiResults.ipapiCo;
-    const fallbacks = {
-      country: d.country_name, countryCode: d.country_code, region: d.region,
-      city: d.city, coordinates: d.latitude && d.longitude ? `${d.latitude}, ${d.longitude}` : null,
-      timezone: d.timezone, isp: d.org, org: d.org, asn: d.asn ? `AS${d.asn}` : null
-    };
-    for (const [key, val] of Object.entries(fallbacks)) {
-      if (!geo[key] && val) geo[key] = val;
-    }
-    if (d.currency) geo.currency = d.currency;
-    if (d.languages) geo.languages = d.languages;
-  }
-
   return Object.keys(geo).length > 0 ? geo : null;
 };
 
@@ -816,6 +846,12 @@ const extractTechnical = (apiResults, iocType) => {
       const { proxy, hosting, mobile, reverse } = apiResults.ipapi;
       Object.assign(tech, { proxy: proxy || false, hosting: hosting || false, mobile: mobile || false, reverse });
     }
+    if (apiResults.internetdb) {
+      const { ports, hostnames, cpes } = apiResults.internetdb;
+      if (ports && ports.length > 0) tech.ports = ports;
+      if (hostnames && hostnames.length > 0) tech.hostnames = hostnames;
+      if (cpes && cpes.length > 0) tech.cpes = cpes;
+    }
     if (apiResults.shodan) {
       const { ports, hostnames, os } = apiResults.shodan;
       Object.assign(tech, { ports, hostnames, os });
@@ -841,6 +877,20 @@ const extractThreats = (apiResults) => {
 
   if (apiResults.greynoise?.classification === 'malicious') {
     threats.push({ type: 'Malicious Scanner', description: apiResults.greynoise.name || 'Classified as malicious by GreyNoise', severity: 'high', source: 'GreyNoise' });
+  }
+
+  if (apiResults.internetdb?.vulns && Array.isArray(apiResults.internetdb.vulns)) {
+    const vulnCount = apiResults.internetdb.vulns.length;
+    if (vulnCount > 0) {
+      const vulnList = apiResults.internetdb.vulns.slice(0, 5).join(', ');
+      const moreText = vulnCount > 5 ? ` (+${vulnCount - 5} more)` : '';
+      threats.push({
+        type: 'Known Vulnerabilities',
+        description: `${vulnCount} CVE(s): ${vulnList}${moreText}`,
+        severity: vulnCount > 10 ? 'critical' : 'high',
+        source: 'InternetDB'
+      });
+    }
   }
 
   if (apiResults.shodan?.vulns) {
@@ -903,6 +953,14 @@ function extractTags(apiResults) {
   // GreyNoise tags
   if (apiResults.greynoise?.tags && Array.isArray(apiResults.greynoise.tags)) {
     apiResults.greynoise.tags.forEach(tag => tags.generalTags.add(tag));
+  }
+
+  // InternetDB tags and CVEs
+  if (apiResults.internetdb) {
+    if (apiResults.internetdb.tags && Array.isArray(apiResults.internetdb.tags)) {
+      apiResults.internetdb.tags.forEach(tag => tags.generalTags.add(tag));
+    }
+    // CVEs are treated as vulnerabilities, not tags (handled in extractThreats)
   }
 
   // Shodan tags
@@ -1004,7 +1062,7 @@ function calculateReputation(apiResults, iocType, apiErrors = []) {
   const evidence = { malicious: [], suspicious: [], clean: [], unknown: [] };
 
   // APIs that only provide geolocation/metadata, not reputation
-  const geoOnlyAPIs = ['ipapi', 'ipapiCo'];
+  const geoOnlyAPIs = ['ipapi'];
 
   // Collecter les verdicts de toutes les APIs activées et compatibles
   for (const [apiName, spec] of Object.entries(API_REGISTRY)) {
@@ -1242,29 +1300,25 @@ function displayReputation(reputation, displaySections) {
 
   indicator.className = 'indicator';
 
+  // Icon mapping for each status
+  const statusIcons = {
+    malicious: '🔴',
+    suspicious: '🟡',
+    safe: '🟢',
+    unknown: '⚪'
+  };
+
   if (!reputation) {
     indicator.classList.add('unknown');
-    indicator.innerHTML = '<svg viewBox="0 0 80 80"><circle class="circle-bg" cx="40" cy="40" r="32"></circle></svg><div class="score-value">?</div>';
+    indicator.innerHTML = `<div class="status-icon">${statusIcons.unknown}</div>`;
     text.innerHTML = '<strong>UNKNOWN</strong>';
     return;
   }
 
   indicator.classList.add(reputation.status);
+  const icon = statusIcons[reputation.status] || statusIcons.unknown;
 
-  const radius = 32;
-  const circumference = 2 * Math.PI * radius;
-  const progress = (reputation.score / 100) * circumference;
-  const offset = circumference - progress;
-
-  indicator.innerHTML = `
-    <svg viewBox="0 0 80 80" role="img" aria-label="Reputation score ${reputation.score} out of 100">
-      <circle class="circle-bg" cx="40" cy="40" r="${radius}"></circle>
-      <circle class="circle-progress" cx="40" cy="40" r="${radius}"
-              stroke-dasharray="${circumference}"
-              stroke-dashoffset="${offset}"></circle>
-    </svg>
-    <div class="score-value" aria-hidden="true">${reputation.score}</div>
-  `;
+  indicator.innerHTML = `<div class="status-icon">${icon}</div>`;
 
   text.innerHTML = `
     <strong>${reputation.status.toUpperCase()}</strong>
@@ -1541,6 +1595,51 @@ async function copyJSON() {
   }
 }
 
+async function exportJSON() {
+  if (!window.currentEnrichmentData) {
+    showError('No data to export');
+    return;
+  }
+
+  try {
+    const json = JSON.stringify(window.currentEnrichmentData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    // Generate filename with IOC value and timestamp
+    const iocValue = window.currentEnrichmentData.ioc?.value || 'unknown';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
+    const sanitizedIOC = iocValue.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const filename = `ioclens_${sanitizedIOC}_${timestamp}.json`;
+
+    // Create temporary link and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Visual feedback
+    const btn = document.getElementById('export-json');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Exported!';
+    btn.style.background = '#00aa00';
+
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 2000);
+
+    await Logger.logUI('JSON exported', { filename, iocValue });
+
+  } catch (error) {
+    console.error('[Export] Error:', error);
+    showError('Failed to export data');
+  }
+}
+
 async function refreshData() {
   try {
     console.log('[Refresh] Starting refresh - clearing cache...');
@@ -1799,6 +1898,10 @@ async function toggleTheme() {
   } catch (error) {
     console.error('[Theme] Failed to toggle theme:', error);
   }
+}
+
+function openSettings() {
+  chrome.runtime.openOptionsPage();
 }
 
 function applyTheme(theme) {

@@ -165,6 +165,39 @@ body {
   margin: 0;
 }
 
+/* Header Buttons Container */
+.header-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Settings Button */
+.settings-btn {
+  background: transparent;
+  border: 2px solid #00aaff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.settings-btn:hover {
+  background: #00aaff;
+  transform: rotate(90deg);
+}
+
+.settings-icon {
+  font-size: 18px;
+  display: block;
+  line-height: 1;
+}
+
 /* Theme Toggle Button */
 .theme-toggle-btn {
   background: transparent;
@@ -310,73 +343,17 @@ body {
 }
 
 .indicator {
-  position: relative;
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.indicator svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.indicator .circle-bg {
-  fill: none;
-  stroke: #333;
-  stroke-width: 6;
-}
-
-.indicator .circle-progress {
-  fill: none;
-  stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.5s ease;
-}
-
-.indicator.safe .circle-progress {
-  stroke: #00ff00;
-}
-
-.indicator.suspicious .circle-progress {
-  stroke: #ffaa00;
-}
-
-.indicator.malicious .circle-progress {
-  stroke: #ff0000;
-}
-
-.indicator.unknown .circle-progress {
-  stroke: #888;
-}
-
-.indicator .score-value {
-  position: relative;
-  font-weight: bold;
-  font-size: 20px;
-  z-index: 1;
-}
-
-.indicator.safe .score-value {
-  color: #00ff00;
-}
-
-.indicator.suspicious .score-value {
-  color: #ffaa00;
-}
-
-.indicator.malicious .score-value {
-  color: #ff0000;
-}
-
-.indicator.unknown .score-value {
-  color: #a0a0a0; /* WCAG AA compliant contrast ratio */
+.indicator .status-icon {
+  font-size: 40px;
+  line-height: 1;
+  user-select: none;
 }
 
 .reputation-text {
@@ -854,6 +831,16 @@ body[data-theme="light"] .header h1 {
   color: #0088cc;
 }
 
+body[data-theme="light"] .settings-btn {
+  border-color: #0088cc;
+  color: #0088cc;
+}
+
+body[data-theme="light"] .settings-btn:hover {
+  background: #0088cc;
+  color: #fff;
+}
+
 body[data-theme="light"] .theme-toggle-btn {
   border-color: #0088cc;
   color: #0088cc;
@@ -921,41 +908,7 @@ body[data-theme="light"] .section h2 {
   color: #0088cc;
 }
 
-body[data-theme="light"] .indicator .circle-bg {
-  stroke: #e5e7eb;
-}
-
-body[data-theme="light"] .indicator.safe .circle-progress {
-  stroke: #16a34a;
-}
-
-body[data-theme="light"] .indicator.safe .score-value {
-  color: #16a34a;
-}
-
-body[data-theme="light"] .indicator.suspicious .circle-progress {
-  stroke: #d97706;
-}
-
-body[data-theme="light"] .indicator.suspicious .score-value {
-  color: #d97706;
-}
-
-body[data-theme="light"] .indicator.malicious .circle-progress {
-  stroke: #dc2626;
-}
-
-body[data-theme="light"] .indicator.malicious .score-value {
-  color: #dc2626;
-}
-
-body[data-theme="light"] .indicator.unknown .circle-progress {
-  stroke: #9ca3af;
-}
-
-body[data-theme="light"] .indicator.unknown .score-value {
-  color: #6b7280;
-}
+/* Status icons are the same in both themes (colored emojis) */
 
 body[data-theme="light"] .api-verdict-item {
   background: #f9fafb;

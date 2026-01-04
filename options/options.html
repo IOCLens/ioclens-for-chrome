@@ -15,7 +15,7 @@
 
   <div class="container">
     <header>
-      <h1>🔍 SOC Threat Intel Extension - Settings</h1>
+      <h1>🔍 IOCLens Threat Intel Enrichment - Settings</h1>
       <p>Configure your API keys and enable/disable enrichment modules</p>
     </header>
 
@@ -32,7 +32,7 @@
       </div>
 
       <div id="free-tier-info" class="tier-info-compact">
-        <span class="tier-message">Free tier: VirusTotal only • Upgrade to unlock all sources</span>
+        <span class="tier-message">Free tier: VirusTotal, ip-api, InternetDB, GreyNoise • Upgrade to unlock all sources</span>
       </div>
 
       <div id="pro-tier-info" class="tier-info-compact hidden">
@@ -73,24 +73,24 @@
         </div>
       </div>
 
-      <!-- ipapi.co -->
+      <!-- InternetDB -->
       <div class="module-card">
         <div class="module-header">
-          <h2>🌐 ipapi.co</h2>
+          <h2>🔎 InternetDB (Shodan)</h2>
           <label class="toggle">
-            <input type="checkbox" id="enable-ipapiCo">
+            <input type="checkbox" id="enable-internetdb" checked>
             <span class="slider"></span>
           </label>
         </div>
-        <p class="module-desc">Alternative IP geolocation with additional details</p>
+        <p class="module-desc">Free Shodan service for IP info: ports, CVEs, tags</p>
         <div class="module-info">
           <span class="badge badge-free">Free</span>
-          <span>1000 req/day</span>
+          <span>No limits • No API key needed</span>
         </div>
         <div class="form-group">
-          <label>API Key (optional for higher limits): <a href="https://ipapi.co/" target="_blank">Get Key</a></label>
-          <input type="password" id="key-ipapiCo" placeholder="Optional - leave empty for free tier">
-          <button class="btn-show-key" aria-label="Toggle ipapi.co API key visibility">👁️</button>
+          <label>API Key (not required - always free): <a href="https://internetdb.shodan.io/" target="_blank">Docs</a></label>
+          <input type="password" id="key-internetdb" placeholder="Not required - service is completely free" disabled>
+          <button class="btn-show-key" aria-label="Toggle InternetDB API key visibility" disabled>👁️</button>
         </div>
       </div>
 

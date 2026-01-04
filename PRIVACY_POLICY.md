@@ -110,13 +110,13 @@ We will notify users of any material changes to this privacy policy by:
 ## Contact
 
 For privacy questions or concerns, please contact:
-- Email: threatscopr.dev@gmail.com
-- Website: https://github.com/IOCLens/ioclens-for-chrome
+- Email: privacy@your-domain.com
+- Website: https://your-website.com/privacy
 
 ## Open Source
 
 IOCLens is open source. You can review the code to verify our privacy claims:
-- GitHub: https://github.com/IOCLens/ioclens-for-chrome
+- GitHub: https://github.com/your-username/ioclens
 
 ---
 
