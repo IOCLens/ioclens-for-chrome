@@ -28,7 +28,6 @@ While the core logic is open-source for transparency, the **Official Chrome Stor
 | **Security** | ✅ **Verified by Google** | ⚠️ Self-audited |
 | **FREE Sources** (VirusTotal, GreyNoise) | ✅ **Included** | ✅ **Included** |
 | **PRO Sources** (AbuseIPDB, Shodan, URLhaus, ThreatFox, OTX) | ✅ **Included** | ❌ Not Available |
-| **CSV Export** | ✅ **Yes** | ❌ No |
 | **Priority Support** | ✅ **Yes** | ❌ Best effort |
 | **Browser Compatibility** | Chrome, Brave, Edge, Opera | Experimental |
 
