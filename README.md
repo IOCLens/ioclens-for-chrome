@@ -10,6 +10,8 @@
 
 Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOCs) during SOC investigations. Save time by aggregating multiple threat intelligence sources in one click.
 
+![Demo](https://public-files.gumroad.com/cml3pnzthmz5ewdqwo6okbxlgozs)
+
 ## Features
 - **Auto-Detection**: Recognizes IPv4 addresses and domains in selected text.
 - **Contextual Menu**: Right-click → "Enrich IOC" to launch analysis.
