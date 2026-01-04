@@ -110,13 +110,13 @@ We will notify users of any material changes to this privacy policy by:
 ## Contact
 
 For privacy questions or concerns, please contact:
-- Email: privacy@your-domain.com
-- Website: https://your-website.com/privacy
+- Email: threatscope.dev@gmail.com
+- Website: https://ioclens.gumroad.com/l/dworo
 
 ## Open Source
 
 IOCLens is open source. You can review the code to verify our privacy claims:
-- GitHub: https://github.com/your-username/ioclens
+- GitHub: https://github.com/IOCLens/ioclens-for-chrome
 
 ---
 
