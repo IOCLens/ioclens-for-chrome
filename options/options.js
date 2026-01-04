@@ -347,9 +347,6 @@ async function testAPIs() {
           case 'ipapi':
             result = await testIPApi(testIP, settings.key);
             break;
-          case 'ipapiCo':
-            result = await testIPApiCo(testIP, settings.key);
-            break;
           case 'internetdb':
             result = await testInternetDB(testIP);
             break;
@@ -442,10 +439,6 @@ const testIPApi = (ip, key) => {
   const protocol = key ? 'https' : 'http';
   const keyParam = key ? `key=${key}` : '';
   return testAPI(`${protocol}://ip-api.com/json/${ip}${keyParam ? '?' + keyParam : ''}`);
-};
-const testIPApiCo = (ip, key) => {
-  const keyParam = key ? `?key=${key}` : '';
-  return testAPI(`https://ipapi.co/${ip}/json/${keyParam}`);
 };
 const testInternetDB = (ip) => testAPI(`https://internetdb.shodan.io/${ip}`);
 const testVirusTotal = (ip, key) => testAPI(`https://www.virustotal.com/api/v3/ip_addresses/${ip}`, { 'x-apikey': key });
