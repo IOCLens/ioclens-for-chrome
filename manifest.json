@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "IOCLens - Threat Intel Enrichment",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Enrich IOCs (IP, domains, URLs, hashes) with threat intelligence from VirusTotal, GreyNoise, InternetDB and more. Right-click any IOC to analyze.",
   "author": "IOCLens",
   "icons": {

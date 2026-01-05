@@ -355,26 +355,40 @@ async function loadAPIConfig() {
     const result = await safeStorageGet(['apiConfig', 'proLicenseKey']);
     const isProUser = !!result.proLicenseKey;
 
+    // Default config: Free users get VirusTotal, ipapi, InternetDB, and GreyNoise
+    const DEFAULT_CONFIG = {
+      modules: {
+        ipapi: { enabled: true, key: '' }, // FREE - geolocation (45 req/min)
+        internetdb: { enabled: true, key: '' }, // FREE - Shodan InternetDB (no limits)
+        virustotal: { enabled: true, key: '' }, // FREE - Always enabled
+        abuseipdb: { enabled: isProUser, key: '' },
+        shodan: { enabled: isProUser, key: '' },
+        urlhaus: { enabled: isProUser, key: '' },
+        threatfox: { enabled: isProUser, key: '' },
+        otx: { enabled: isProUser, key: '' },
+        greynoise: { enabled: true, key: '' } // FREE - Community API (50 req/week)
+      }
+    };
+
     if (result.apiConfig) {
       // SECURITY: Decrypt API keys before use
       // Keys are stored encrypted in chrome.storage.local to prevent theft
-      API_CONFIG = await CryptoUtils.decryptConfig(result.apiConfig);
-      console.log('[Config] Configuration chargée et décryptée');
-    } else {
-      // Default config: Free users get VirusTotal, ipapi, InternetDB, and GreyNoise
+      let decryptedConfig = await CryptoUtils.decryptConfig(result.apiConfig);
+
+      // BUG FIX: Merge with DEFAULT_CONFIG to ensure all modules exist
+      // This handles cases where new APIs are added but user has old saved config
       API_CONFIG = {
+        ...DEFAULT_CONFIG,
+        ...decryptedConfig,
         modules: {
-          ipapi: { enabled: true, key: '' }, // FREE - geolocation (45 req/min)
-          internetdb: { enabled: true, key: '' }, // FREE - Shodan InternetDB (no limits)
-          virustotal: { enabled: true, key: '' }, // FREE - Always enabled
-          abuseipdb: { enabled: isProUser, key: '' },
-          shodan: { enabled: isProUser, key: '' },
-          urlhaus: { enabled: isProUser, key: '' },
-          threatfox: { enabled: isProUser, key: '' },
-          otx: { enabled: isProUser, key: '' },
-          greynoise: { enabled: true, key: '' } // FREE - Community API (50 req/week)
+          ...DEFAULT_CONFIG.modules,
+          ...(decryptedConfig.modules || {})
         }
       };
+
+      console.log('[Config] Configuration chargée, décryptée et fusionnée avec les défauts');
+    } else {
+      API_CONFIG = DEFAULT_CONFIG;
       console.log('[Config] Using default config (PRO:', isProUser, ')');
     }
 

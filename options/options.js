@@ -121,8 +121,29 @@ async function loadSettings() {
     const result = await chrome.storage.local.get(['apiConfig']);
     let config = result.apiConfig || DEFAULT_CONFIG;
 
+    // BUG FIX: Merge saved config with DEFAULT_CONFIG to ensure all modules exist
+    // This handles cases where new APIs are added to DEFAULT_CONFIG but user has old saved config
+    config = {
+      ...DEFAULT_CONFIG,
+      ...config,
+      modules: {
+        ...DEFAULT_CONFIG.modules,
+        ...(config.modules || {})
+      },
+      displaySections: {
+        ...DEFAULT_CONFIG.displaySections,
+        ...(config.displaySections || {})
+      }
+    };
+
     // SECURITY: Migrate plaintext keys to encrypted format if needed
     config = await CryptoUtils.migrateToEncrypted(config);
+
+    // Save the merged config back to storage (this auto-upgrades old configs with new modules)
+    if (result.apiConfig) {
+      await chrome.storage.local.set({ apiConfig: config });
+      console.log('[Options] Config auto-upgraded with new modules');
+    }
 
     // SECURITY: Decrypt API keys for display
     const decryptedConfig = await CryptoUtils.decryptConfig(config);

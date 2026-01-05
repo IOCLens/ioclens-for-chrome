@@ -2,6 +2,28 @@
 
 All notable changes to IOCLens will be documented in this file.
 
+## [1.1.5] - 2026-01-05
+
+### Fixed
+- **Critical config bug**: Settings showing APIs as "enabled" but not actually working
+  - Fixed InternetDB and GreyNoise not appearing for users who upgraded from older versions
+  - Old saved configs now automatically merge with new defaults when loading settings
+  - Removed hardcoded `checked` attributes from HTML that were overriding actual config state
+  - Config auto-upgrade happens seamlessly in both settings page and popup
+  - **Impact**: Users with v1.1.2 or earlier configs now automatically get all new free APIs (InternetDB, GreyNoise)
+
+### Changed
+- Improved config loading logic in `options.js` and `popup.js`
+  - Settings now merge saved config with defaults to ensure all modules exist
+  - Prevents future issues when new APIs are added to the extension
+  - Better handling of missing or incomplete config structures
+- Settings UI now always reflects actual stored configuration state
+
+### Technical
+- Config merging uses JavaScript spread operators to combine `DEFAULT_CONFIG` with saved config
+- Auto-saves upgraded config to storage on first load after update
+- Future-proof: New free APIs will automatically activate for existing users
+
 ## [1.1.4] - 2026-01-04
 
 ### Added
