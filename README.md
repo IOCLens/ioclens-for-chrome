@@ -6,7 +6,9 @@
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-[![Available in the Chrome Web Store](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) **Get it on Chrome Web Store**](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
+[![Available in the Chrome Web Store](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_24x24.png) **Get it on Chrome Web Store**](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
+
+[![Website](https://raw.githubusercontent.com/IOCLens/ioclens-for-chrome/main/icons/icon48.png) **Get it on Chrome Web Store**](https://ioclens.github.io/landing-page/)
 
 Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOCs) during SOC investigations. Save time by aggregating multiple threat intelligence sources in one click.
 
@@ -64,8 +66,6 @@ Buying a license is the best way to support the development of this tool and kee
 - 🔒 CSV export functionality
 - 🔒 Priority email support
 - 🔒 Early access to new features
-
-[Get PRO License](https://chromewebstore.google.com/detail/ioclens-threat-intel-enri/ileoihlcgdihnnahkdnhebahmljkknnj)
 
 ## Screenshots
 
