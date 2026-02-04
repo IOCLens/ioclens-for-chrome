@@ -10,7 +10,7 @@
 
 Chrome Extension (Manifest V3) to instantly enrich Indicators of Compromise (IOCs) during SOC investigations. Save time by aggregating multiple threat intelligence sources in one click.
 
-![Demo](https://public-files.gumroad.com/uz4kxsp4brla21p51ktq7tosukj5)
+![Demo](./assets/ioclens.gif)
 
 ## Features
 - **Auto-Detection**: Recognizes IPv4 addresses and domains in selected text.
