@@ -397,10 +397,18 @@ async function testAPIs() {
         }
       }
 
+      // Handle both string and object formats for display
+      let displayMessage = 'OK';
+      if (result?.error) {
+        displayMessage = typeof result.error === 'string' ? result.error : (result.error.message || JSON.stringify(result.error));
+      } else if (result?.success) {
+        displayMessage = typeof result.success === 'string' ? result.success : JSON.stringify(result.success);
+      }
+
       results.push({
         module,
         success: !result?.error,
-        message: result?.error || result?.success || 'OK'
+        message: displayMessage
       });
 
     } catch (error) {
@@ -436,12 +444,13 @@ const testAPI = async (url, headers = {}) => {
     let errorMessage = `HTTP ${response.status}`;
     try {
       const errorData = await response.json();
+      // Handle both string and object formats
       if (errorData.error) {
-        errorMessage = errorData.error;
+        errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error.message || JSON.stringify(errorData.error);
       } else if (errorData.message) {
-        errorMessage = errorData.message;
+        errorMessage = typeof errorData.message === 'string' ? errorData.message : JSON.stringify(errorData.message);
       } else if (errorData.reason) {
-        errorMessage = errorData.reason;
+        errorMessage = typeof errorData.reason === 'string' ? errorData.reason : JSON.stringify(errorData.reason);
       }
     } catch (e) {
       // JSON parsing failed, use HTTP status
@@ -479,8 +488,9 @@ const testURLhaus = async (domain, key) => {
     let errorMessage = `HTTP ${response.status}`;
     try {
       const errorData = await response.json();
-      if (errorData.error) errorMessage = errorData.error;
-      else if (errorData.message) errorMessage = errorData.message;
+      // Handle both string and object formats
+      if (errorData.error) errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error.message || JSON.stringify(errorData.error);
+      else if (errorData.message) errorMessage = typeof errorData.message === 'string' ? errorData.message : JSON.stringify(errorData.message);
     } catch (e) { }
     return { error: errorMessage };
   }
@@ -504,8 +514,9 @@ const testThreatFox = async (ip, key) => {
     let errorMessage = `HTTP ${response.status}`;
     try {
       const errorData = await response.json();
-      if (errorData.error) errorMessage = errorData.error;
-      else if (errorData.message) errorMessage = errorData.message;
+      // Handle both string and object formats
+      if (errorData.error) errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error.message || JSON.stringify(errorData.error);
+      else if (errorData.message) errorMessage = typeof errorData.message === 'string' ? errorData.message : JSON.stringify(errorData.message);
     } catch (e) { }
     return { error: errorMessage };
   }

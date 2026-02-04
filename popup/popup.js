@@ -494,12 +494,13 @@ async function callAPI(apiName, ioc) {
       try {
         const errorData = await response.json();
         // Check for various error message formats (error, detail, message)
+        // Handle both string and object formats
         if (errorData.error) {
-          errorMessage = errorData.error;
+          errorMessage = typeof errorData.error === 'string' ? errorData.error : errorData.error.message || JSON.stringify(errorData.error);
         } else if (errorData.detail) {
-          errorMessage = errorData.detail;
+          errorMessage = typeof errorData.detail === 'string' ? errorData.detail : errorData.detail.message || JSON.stringify(errorData.detail);
         } else if (errorData.message) {
-          errorMessage = errorData.message;
+          errorMessage = typeof errorData.message === 'string' ? errorData.message : JSON.stringify(errorData.message);
         }
       } catch (e) {
         // JSON parsing failed, use generic error

@@ -2,6 +2,15 @@
 
 All notable changes to IOCLens will be documented in this file.
 
+## [1.1.6] - 2026-02-03
+
+### Added
+- **"Give me Five" button**: New button in settings page to rate IOCLens on Chrome Web Store
+- **Official Website button**: New button in settings page linking to https://ioclens.github.io/landing-page/
+
+### Removed
+- **PRO badge removed from popup footer**: Simplified footer display
+
 ## [1.1.5] - 2026-01-05
 
 ### Fixed
