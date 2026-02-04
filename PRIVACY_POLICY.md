@@ -111,7 +111,7 @@ We will notify users of any material changes to this privacy policy by:
 
 For privacy questions or concerns, please contact:
 - Email: threatscope.dev@gmail.com
-- Website: https://ioclens.gumroad.com/l/dworo
+- Website: https://ioclens.github.io/landing-page/
 
 ## Open Source
 
