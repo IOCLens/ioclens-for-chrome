@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "IOCLens - Threat Intel Enrichment",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Instant threat intelligence for SOC Analysts. Enrich IPs & domains via VirusTotal, Shodan and 7+ other sources securely.",
   "author": "IOCLens",
   "icons": {
